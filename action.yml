@@ -19,7 +19,7 @@ runs:
         --cap-add=NET_ADMIN                                     \
         --device /dev/net/tun:/dev/net/tun                      \
         -v "$(pwd)"/${{ inputs.shared-dir }}:/mnt/user          \
-        ghcr.io/antmicro/renode-linux-runner-action             \
+        ghcr.io/antmicro-labs/renode-linux-runner-action             \
         "${{ inputs.renode-run }}"                              \
         "${{ inputs.devices }}"
       shell: bash

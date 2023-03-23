@@ -358,6 +358,8 @@ def setup_renode():
         run_cmd(child, "#", 'echo "[global]" >> $HOME/.config/pip/pip.conf')
         run_cmd(child, "#", 'echo "disable-pip-version-check = True" >> $HOME/.config/pip/pip.conf')
 
+        run_cmd(child, "#", "git config --global --unset-all remote.origin.proxy")
+
         child.expect_exact("#")
     except px_TIMEOUT:
         print("Timeout!")

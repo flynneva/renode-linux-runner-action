@@ -4,7 +4,7 @@ from sys import argv, exit
 path = ['jobs',
         'default-configuration-test',
         'steps',
-        2,
+        1,
         'with']
 
 def ret_arg(arg: str) -> str:

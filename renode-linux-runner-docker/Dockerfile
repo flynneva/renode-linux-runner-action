@@ -73,10 +73,9 @@ RUN apt-get update -qq && \
 
 FROM packages as finish
 
-COPY --from=builder /images /mut_images
 COPY payload/* /
 
-RUN mkdir -p /mnt && mkdir -p /mnt/user
+RUN mkdir -p /mnt/user
 
 WORKDIR /github/workspace
 

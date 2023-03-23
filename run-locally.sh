@@ -7,8 +7,6 @@ SHARED_DIR="$(python3 extract_arguments.py shared-dir)"
 mkdir $IMAGE_PATH/tests
 cp -r -f tests/* $IMAGE_PATH/tests/
 
-git clone https://github.com/antmicro/pyrav4l2.git $IMAGE_PATH/tests/pyrav4l2
-
 docker build -t $IMAGE_PATH      \
              -f $DOCKERFILE_PATH \
               $IMAGE_PATH &&     \
