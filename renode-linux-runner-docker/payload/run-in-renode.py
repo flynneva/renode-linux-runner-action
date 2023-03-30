@@ -296,6 +296,39 @@ def run_cmd(child_process: px_spawn,
     child_process.expect_exact(output_to_expect, timeout=timeout)
     child_process.sendline(cmd_to_run)
 
+def setup_network():
+
+    child = px_spawn("sh", encoding="utf-8", timeout=10)
+
+    try:
+        child.expect_exact('#')
+        child.sendline('')
+
+        # FilteredStdout is used to remove \r characters from telnet output.
+        # GitHub workflow log GUI interprets this sequence as newline.
+        child.logfile_read = FilteredStdout(sys_stdout, CR, "")
+
+        run_cmd(child, "#", "telnet 127.0.0.1 1234")
+
+        run_cmd(child, "(monitor)", 'emulation CreateTap "tap0" "tap"')
+        child.expect_exact("(monitor)")
+        child.sendcontrol("]")
+        run_cmd(child, "telnet>", 'quit')
+
+        run_cmd(child, "#", 'ip addr add "172.16.0.1/16" dev tap0')
+        run_cmd(child, "#", "ip link set up dev tap0")
+        run_cmd(child, "#", "sysctl -w net.ipv4.ip_forward=1")
+        run_cmd(child, "#", "sysctl -p")
+        run_cmd(child, "#", "iptables --table nat --append POSTROUTING --out-interface eth0 -j MASQUERADE")
+        # run_cmd(child, "#", "iptables --append FORWARD --in-interface tap0 -j ACCEPT")
+
+        child.expect_exact("#")
+
+    except px_TIMEOUT:
+        print("Timeout!")
+        sys_exit(1)
+
+
 
 def setup_renode():
     """
@@ -307,6 +340,7 @@ def setup_renode():
 
     try:
         child.expect_exact("'^]'.")
+        child.sendcontrol("c")
 
         # FilteredStdout is used to remove \r characters from telnet output.
         # GitHub workflow log GUI interprets this sequence as newline.
@@ -418,5 +452,6 @@ if __name__ == "__main__":
 
     create_shared_directory_image()
     run_renode_in_background()
+    setup_network()
     setup_renode()
     run_cmds_in_renode(sys_argv[1])

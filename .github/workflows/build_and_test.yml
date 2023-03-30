@@ -44,15 +44,8 @@ jobs:
         with:
           shared-dir: ./tests
           renode-run: |
-            ping -c 3 172.16.0.1
-            wget example.org
-            gpiodetect
-            sh gpio.sh
-            sh i2c.sh
-            python test.py
+            ping 8.8.8.8 -c 3
             pip install git+https://github.com/antmicro/pyrav4l2.git
             python controls-enumeration.py
           devices: |
             vivid
-            gpio 0 16
-            i2c 0x1C

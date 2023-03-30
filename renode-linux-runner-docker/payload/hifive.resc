@@ -1,6 +1,5 @@
 $name?="hifive-unleashed"
 
-emulation CreateTap "tap0" "tap"
 emulation CreateSwitch "switch0"
 connector Connect host.tap switch0
 

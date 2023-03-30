@@ -10,8 +10,7 @@ cp -r -f tests/* $IMAGE_PATH/tests/
 docker build -t $IMAGE_PATH      \
              -f $DOCKERFILE_PATH \
               $IMAGE_PATH &&     \
-docker run --cap-add=NET_ADMIN                             \
-           --device /dev/net/tun:/dev/net/tun              \
+docker run --privileged                                    \
            -v "$(pwd)"/$IMAGE_PATH/$SHARED_DIR:/mnt/user   \
            $IMAGE_PATH                                     \
            "$(python3 extract_arguments.py renode-run)"    \
