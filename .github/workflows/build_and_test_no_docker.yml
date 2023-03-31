@@ -57,14 +57,13 @@ jobs:
           image-path: https://github.com/${{ github.repository }}/releases/download/latest/images.tar.xz
           renode-run: |
             ping -c 3 172.16.0.1
-            ping -c 3 10.1.1.102
             wget example.org
+            pip install git+https://github.com/antmicro/pyrav4l2.git
+            python test.py
+            python controls-enumeration.py
             gpiodetect
             sh gpio.sh
             sh i2c.sh
-            python test.py
-            pip install git+https://github.com/antmicro/pyrav4l2.git
-            python controls-enumeration.py
           devices: |
             vivid
             gpio 0 16
