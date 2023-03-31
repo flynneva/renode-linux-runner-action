@@ -44,6 +44,7 @@ runs:
 
     - id: unpack-images
       run: tar xvf ${{ inputs.image }}
+      shell: bash
     
     - id: copy-user-path
       run: |

@@ -13,6 +13,7 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: filter
         with:
+          base: HEAD
           filters: |
             build:
               - 'br2-external/**'
