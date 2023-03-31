@@ -1,22 +1,13 @@
-#!/bin/bash
+#!/usr/bin/bash
 
-IMAGE_PATH=renode-linux-runner-docker
-DOCKERFILE_PATH=$IMAGE_PATH/Dockerfile
-SHARED_DIR="$(python3 extract_arguments.py shared-dir)"
+if ! command -v act &> /dev/null; then
+    echo "You need nektos/act to run this action: https://github.com/nektos/act"
+    exit
+fi
 
-mkdir $IMAGE_PATH/tests
-cp -r -f tests/* $IMAGE_PATH/tests/
+echo -e "{\n  \"act\": true\n}" > env.json
 
-git clone https://github.com/antmicro/pyrav4l2.git $IMAGE_PATH/tests/pyrav4l2
 
-docker build -t $IMAGE_PATH      \
-             -f $DOCKERFILE_PATH \
-              $IMAGE_PATH &&     \
-docker run --cap-add=NET_ADMIN                             \
-           --device /dev/net/tun:/dev/net/tun              \
-           -v "$(pwd)"/$IMAGE_PATH/$SHARED_DIR:/mnt/user   \
-           $IMAGE_PATH                                     \
-           "$(python3 extract_arguments.py renode-run)"    \
-           "$(python3 extract_arguments.py devices)"
 
-yes | rm -r -f $IMAGE_PATH/tests
+act -j default-configuration-test -e env.json --container-options "--privileged"
+rm env.json
