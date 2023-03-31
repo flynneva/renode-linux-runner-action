@@ -318,7 +318,7 @@ def setup_renode():
         run_cmd(child, "(hifive-unleashed)", "uart_connect sysbus.uart0")
 
         index = child.expect_exact(["buildroot login:", "Kernel panic"],
-                                   timeout=120)
+                                   timeout=240)
         if index == 0:
             child.sendline("root")
         elif index == 1:
