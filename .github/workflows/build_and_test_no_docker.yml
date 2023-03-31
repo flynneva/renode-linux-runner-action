@@ -50,16 +50,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: download-image
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: ${{ github.repository }}
-
       - name: run-in-renode
         uses: ./
         with:
           shared-dir: ./tests
-          image: images.tar.xz
+          image-path: https://github.com/${{ github.repository }}/releases/download/latest/images.tar.xz
           renode-run: |
             ping -c 3 172.16.0.1
             wget example.org

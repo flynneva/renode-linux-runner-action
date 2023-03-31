@@ -10,9 +10,10 @@ inputs:
     description: Devices to set up
     required: false
     default: ""
-  image:
-    description: Compiled linux kernel
-    required: true
+  image-path:
+    description: Compiled linux kernel path
+    required: false
+    default: "https://github.com/antmicro-labs/renode-linux-runner-action/releases/download/latest/images.tar.xz"
 runs:
   using: composite
   steps:
@@ -42,8 +43,8 @@ runs:
         ./renode_1.13.0_amd64.deb
       shell: bash
 
-    - id: unpack-images
-      run: tar xvf ${{ inputs.image }}
+    - id: get-images
+      run: wget ${{ inputs.image-path }} && tar xvf images.tar.xz
       shell: bash
     
     - id: copy-user-path
@@ -53,5 +54,5 @@ runs:
       shell: bash
 
     - id: test
-      run: sudo bash renode-linux-runner-docker/payload/config "${{ inputs.renode-run }}" "${{ inputs.devices }}"
+      run: sudo bash action/config "${{ inputs.renode-run }}" "${{ inputs.devices }}"
       shell: bash

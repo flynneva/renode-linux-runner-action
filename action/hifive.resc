@@ -17,10 +17,10 @@ connector Connect sysbus.ethernet switch0
 showAnalyzer uart0
 e51 LogFunctionNames true
 
-$fdt ?=    @/images/hifive-unleashed-a00.dtb
-$elf ?=    @/images/fw_payload.elf
-$image ?=  @/images/Image
-$rootfs ?= @/images/rootfs.cpio
+$fdt ?=    @images/hifive-unleashed-a00.dtb
+$elf ?=    @images/fw_payload.elf
+$image ?=  @images/Image
+$rootfs ?= @images/rootfs.cpio
 
 macro reset
 """

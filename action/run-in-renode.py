@@ -312,7 +312,7 @@ def setup_renode():
         # GitHub workflow log GUI interprets this sequence as newline.
         child.logfile_read = FilteredStdout(sys_stdout, CR, "")
 
-        run_cmd(child, "(monitor)", "include @/hifive.resc")
+        run_cmd(child, "(monitor)", "include @action/hifive.resc")
 
         run_cmd(child, "(hifive-unleashed)", "start")
         run_cmd(child, "(hifive-unleashed)", "uart_connect sysbus.uart0")
