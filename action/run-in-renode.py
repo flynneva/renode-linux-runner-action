@@ -319,8 +319,8 @@ def setup_network():
         run_cmd(child, "#", 'ip addr add "172.16.0.1/16" dev tap0')
         run_cmd(child, "#", "ip link set up dev tap0")
         run_cmd(child, "#", "sysctl -w net.ipv4.ip_forward=1")
-        run_cmd(child, "#", "sysctl -p")
-        run_cmd(child, "#", "iptables --table nat --append POSTROUTING --out-interface eth0 -j MASQUERADE")
+        run_cmd(child, "#", "ip addr")
+        run_cmd(child, "#", "ip route")
 
         child.expect_exact("#")
 

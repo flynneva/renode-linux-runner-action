@@ -57,6 +57,7 @@ jobs:
           image-path: https://github.com/${{ github.repository }}/releases/download/latest/images.tar.xz
           renode-run: |
             ping -c 3 172.16.0.1
+            ping -c 3 10.1.1.102
             wget example.org
             gpiodetect
             sh gpio.sh

@@ -17,27 +17,19 @@ inputs:
 runs:
   using: composite
   steps:
-
-    - id: important-checks
-      run: |
-        ls -alh
-        ip addr
-        pwd
-      shell: bash
-
     - id: install-pip-packages
       run: pip3 install pexpect
       shell: bash
 
     - id: download-renode
       run: |
-        wget https://github.com/renode/renode/releases/download/v1.13.0/renode_1.13.0_amd64.deb &&
-        DEBIAN_FRONTEND=noninteractive sudo apt-get -y install --no-install-recommends \
+        wget -q --no-verbose https://github.com/renode/renode/releases/download/v1.13.0/renode_1.13.0_amd64.deb &&
+        sudo DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
         ./renode_1.13.0_amd64.deb
       shell: bash
 
     - id: get-images
-      run: wget ${{ inputs.image-path }} && tar xvf images.tar.xz
+      run: wget -q --no-verbose ${{ inputs.image-path }} && tar xf images.tar.xz
       shell: bash
     
     - id: copy-user-path
