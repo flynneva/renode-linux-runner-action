@@ -25,6 +25,8 @@ from string import hexdigits
 from datetime import datetime
 
 CR = r'\r'
+HOST_INTERFACE = "eth0"
+TAP_INTERFACE = "tap0"
 
 
 class FilteredStdout(object):
@@ -316,14 +318,15 @@ def setup_network():
         child.sendcontrol("]")
         run_cmd(child, "telnet>", 'quit')
 
-        run_cmd(child, "#", 'ip addr add "172.16.0.1/16" dev tap0')
-        run_cmd(child, "#", "ip link set up dev tap0")
+        # This configuration allows simulated Linux to connect to the Internet.
+        # Linux in Renode has the static IP 172.16.0.2/16.
+
+        run_cmd(child, "#", f'ip addr add "172.16.0.1/16" dev {TAP_INTERFACE}')
+        run_cmd(child, "#", f"ip link set up dev {TAP_INTERFACE}")
         run_cmd(child, "#", "sysctl -w net.ipv4.ip_forward=1")
-        run_cmd(child, "#", "ip addr")
-        run_cmd(child, "#", "iptables -A FORWARD -i tap0 -o eth0 -j ACCEPT")
-        run_cmd(child, "#", "iptables -A FORWARD -i eth0 -o tap0 -m state --state RELATED,ESTABLISHED -j ACCEPT")
-        run_cmd(child, "#", "iptables -A FORWARD -i eth0 -o tap0 -m state --state RELATED,ESTABLISHED -j ACCEPT")
-        run_cmd(child, "#", "iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE")
+        run_cmd(child, "#", f"iptables -A FORWARD -i {TAP_INTERFACE} -o {HOST_INTERFACE} -j ACCEPT")
+        run_cmd(child, "#", f"iptables -A FORWARD -i {HOST_INTERFACE} -o {TAP_INTERFACE} -m state --state RELATED,ESTABLISHED -j ACCEPT")
+        run_cmd(child, "#", f"iptables -t nat -A POSTROUTING -o {HOST_INTERFACE} -j MASQUERADE")
 
         child.expect_exact("#")
 

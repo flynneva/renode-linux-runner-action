@@ -38,13 +38,6 @@ runs:
         sudo cp -r ${{ inputs.shared-dir }}/* /mnt/user
       shell: bash
 
-    - id: info
-      run: |
-        ls
-        ls /mnt/user
-        sysctl net.ipv4.ip_forward
-      shell: bash
-
     - id: test
-      run: sudo bash action/config "${{ inputs.renode-run }}" "${{ inputs.devices }}"
+      run: sudo python action/run-in-renode.py "${{ inputs.renode-run }}" "${{ inputs.devices }}"
       shell: bash
