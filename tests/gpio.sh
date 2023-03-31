@@ -4,7 +4,7 @@ print_result()
         echo Done!
     else
         echo FAIL!
-        exit 1
+        exit 1face.preferred_buffer_transfo
     fi
 }
 
