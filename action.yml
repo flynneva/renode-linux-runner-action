@@ -10,6 +10,9 @@ inputs:
     description: Devices to set up
     required: false
     default: ""
+  image:
+    description: Compiled linux kernel
+    required: true
 runs:
   using: composite
   steps:
@@ -17,24 +20,8 @@ runs:
       run: |
         sudo apt-get update -qq && \
         DEBIAN_FRONTEND=noninteractive sudo apt-get -y install --no-install-recommends \
-        ca-certificates \
-        git \
-        wget \
-        bc \
-        bzip2 \
-        cpio \
-        file \
-        g++ \
-        make \
-        patch \
-        rsync \
-        unzip \
-        python3 \
-        python3-dev \
-        pip \
-        telnet \
-        iproute2 \
-        iptables && \
+        ca-certificates git wget bc bzip2 cpio file g++ make patch rsync unzip python3 \
+        python3-dev pip telnet iproute2 iptables && \
         sudo update-ca-certificates
       shell: bash
 
@@ -55,19 +42,8 @@ runs:
         ./renode_1.13.0_amd64.deb
       shell: bash
 
-    - id: install-buildroot
-      run: git clone --branch 2022.11.2 https://github.com/buildroot/buildroot buildroot
-      shell: bash
-
-    - id: compile-kernel
-      run: |
-        cd buildroot && \
-        make BR2_EXTERNAL=../renode-linux-runner-docker/br2_external hifive_unleashed_defconfig && \
-        make && \
-        cd .. && \
-        mkdir -p images && \
-        for i in hifive-unleashed-a00.dtb fw_payload.elf Image rootfs.cpio; do cp buildroot/output/images/$i images; done
-      shell: bash
+    - id: unpack-images
+      run: tar xvf ${{ inputs.image }}
     
     - id: copy-user-path
       run: |

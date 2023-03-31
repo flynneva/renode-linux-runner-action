@@ -16,7 +16,6 @@ jobs:
           filters: |
             build:
               - 'renode-linux-runner-docker/**'
-
   build:
     runs-on: ubuntu-latest
     needs: changes
@@ -38,6 +37,8 @@ jobs:
     if: ${{ !failure() }}
     steps:
       - uses: actions/checkout@v3
+
+      
 
       - name: Run in Renode
         uses: ./
