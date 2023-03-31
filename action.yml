@@ -40,6 +40,8 @@ runs:
 
     - id: info
       run: |
+        ls
+        ls /mnt/user
         sysctl net.ipv4.ip_forward
       shell: bash
 
