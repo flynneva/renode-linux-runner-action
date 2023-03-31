@@ -54,19 +54,11 @@ jobs:
          sudo apt update -qq && sudo DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
          python3-pip telnet iptables iproute2
 
-<<<<<<< HEAD
       - name: test
         uses: ./
         with:
           shared-dir: ./tests
           image: https://github.com/${{ github.repository }}/releases/download/latest/images.tar.xz
-=======
-      - name: run-in-renode
-        uses: ./
-        with:
-          shared-dir: ./tests
-          image-source: https://github.com/${{ github.repository }}/releases/download/latest/images.tar.xz
->>>>>>> cb3df2d (Removes docker)
           renode-run: |
             ping -c 3 172.16.0.1
             wget example.org

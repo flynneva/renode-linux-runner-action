@@ -6,7 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
-    # if: ${{ !github.event.act }}
     steps:
       - uses: actions/checkout@v3
 

@@ -20,4 +20,3 @@ index cabd3b1..40e23e8 100644
 +CONFIG_BOOTCOMMAND="booti 0x8b000000 - 0x88000000"
 -- 
 2.30.2
-
