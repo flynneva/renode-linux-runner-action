@@ -13,13 +13,62 @@ inputs:
 runs:
   using: composite
   steps:
-    - id: run
+    - id: install-packages
       run: |
-        docker run                                              \
-        --cap-add=NET_ADMIN                                     \
-        --device /dev/net/tun:/dev/net/tun                      \
-        -v "$(pwd)"/${{ inputs.shared-dir }}:/mnt/user          \
-        ghcr.io/antmicro/renode-linux-runner-action             \
-        "${{ inputs.renode-run }}"                              \
-        "${{ inputs.devices }}"
+        sudo apt-get update -qq && \
+        DEBIAN_FRONTEND=noninteractive sudo apt-get -y install --no-install-recommends \
+        ca-certificates \
+        git \
+        wget \
+        bc \
+        bzip2 \
+        cpio \
+        file \
+        g++ \
+        make \
+        patch \
+        rsync \
+        unzip \
+        python3 \
+        python3-dev \
+        pip \
+        telnet \
+        iproute2 \
+        iptables && \
+        sudo update-ca-certificates
+      shell: bash
+
+    - id: install-pip-packages
+      run: pip3 install pexpect
+      shell: bash
+
+    - id: download-renode
+      run: |
+        wget https://github.com/renode/renode/releases/download/v1.13.0/renode_1.13.0_amd64.deb &&
+        DEBIAN_FRONTEND=noninteractive sudo apt-get -y install --no-install-recommends \
+        ./renode_1.13.0_amd64.deb
+      shell: bash
+
+    - id: install-buildroot
+      run: git clone --branch 2022.11.2 https://github.com/buildroot/buildroot buildroot
+      shell: bash
+
+    - id: compile-kernel
+      run: |
+        cd buildroot && \
+        make BR2_EXTERNAL=../renode-linux-runner-docker/br2_external hifive_unleashed_defconfig && \
+        make && \
+        cd .. && \
+        mkdir -p images && \
+        for i in hifive-unleashed-a00.dtb fw_payload.elf Image rootfs.cpio; do cp buildroot/output/images/$i images; done
+      shell: bash
+    
+    - id: copy-user-path
+      run: |
+        sudo mkdir -p /mnt/user && \
+        sudo cp -r "$(pwd)"/${{ inputs.shared-dir }} /mnt/user
+      shell: bash
+
+    - id: test
+      run: sudo bash renode-linux-runner-docker/payload/config
       shell: bash

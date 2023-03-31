@@ -14,4 +14,4 @@ ip link set up dev ${TAP_INTERFACE} && \
 iptables --table nat --append POSTROUTING --out-interface ${HOST_INTERFACE} -j MASQUERADE && \
 iptables --append FORWARD --in-interface ${TAP_INTERFACE} -j ACCEPT
 
-exec /run-in-renode.py "$@"
+exec renode-linux-runner-docker/payload/run-in-renode.py "$@"

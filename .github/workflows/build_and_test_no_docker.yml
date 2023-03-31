@@ -1,0 +1,28 @@
+name: Build and test no Docker
+on: [push, workflow_dispatch, repository_dispatch]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: git clone https://github.com/antmicro/pyrav4l2.git tests/pyrav4l2
+
+      - name: Run in Renode
+        uses: ./
+        with:
+          shared-dir: ./tests
+          renode-run: |
+            ping -c 3 172.16.0.1
+            wget example.org
+            gpiodetect
+            sh gpio.sh
+            sh i2c.sh
+            python test.py
+            pip install git+https://github.com/antmicro/pyrav4l2.git
+            python controls-enumeration.py
+          devices: |
+            vivid
+            gpio 0 16
+            i2c 0x1C
