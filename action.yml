@@ -38,6 +38,12 @@ runs:
         sudo update-ca-certificates
       shell: bash
 
+    - id: important-checks
+      run: |
+        ls -alh
+        ip addr
+      shell: bash
+
     - id: install-pip-packages
       run: pip3 install pexpect
       shell: bash
