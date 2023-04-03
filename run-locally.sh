@@ -7,5 +7,5 @@ fi
 
 echo -e "{\n  \"act\": true\n}" > env.json
 
-act -j build-and-test -e env.json --container-options "--privileged"
+act -j default-configuration-test -e env.json --container-options "--privileged"
 rm env.json

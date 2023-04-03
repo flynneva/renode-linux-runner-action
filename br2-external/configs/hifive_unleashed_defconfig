@@ -67,6 +67,8 @@ BR2_GLOBAL_PATCH_DIR="${BR2_EXTERNAL_SIFIVE_RENODE_CI_PATH}/patches"
 
 # Packages
 
+#test
+
 # video4linux packages
 BR2_PACKAGE_LIBV4L=y
 BR2_PACKAGE_LIBV4L_UTILS=y
