@@ -20,8 +20,7 @@ jobs:
               - 'br2-external/**'
   build:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
+    permissions: read-all|write-all
     needs: changes
     if: ${{ needs.changes.outputs.build == 'true' && !github.event.act }}
     steps:
