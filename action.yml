@@ -10,8 +10,12 @@ inputs:
     description: Devices to set up
     required: false
     default: ""
-  image-path:
-    description: Compiled linux kernel path
+  image-source-type:
+    description: How linux image is provided - url or path
+    required: false
+    default: "url"
+  image-source:
+    description: Compiled linux image source
     required: false
     default: "https://github.com/antmicro/renode-linux-runner-action/releases/download/latest/images.tar.xz"
 runs:
@@ -29,7 +33,7 @@ runs:
       shell: bash
 
     - id: get-images
-      run: wget -q --no-verbose ${{ inputs.image-path }} && tar xf images.tar.xz
+      run: ./scripts/get-image.sh ${{ inputs.image-source-type }} ${{ inputs.image-source }} && tar xf images.tar.xz
       shell: bash
     
     - id: copy-user-path

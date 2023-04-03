@@ -1,11 +1,14 @@
 # renode-linux-runner-action
+
 Copyright (c) 2022 [Antmicro](https://www.antmicro.com)
 
 renode-linux-runner-action is a GitHub Action that can run scripts on Linux inside the Renode emulation.
 
 ## Emulated system
+
 The emulated system is based on the [Buildroot 2022.11.2](https://github.com/buildroot/buildroot/tree/2022.11.2) and it runs on the RISC-V/HiFive Unleashed platform in [Renode 1.13](https://github.com/renode/renode).
 It contains the Linux kernel configured with some emulated devices enabled and it has the following packages installed:
+
 - Python 3.10.7
 - pip 21.2.4
 - v4l2-utils 1.22.1
@@ -16,7 +19,8 @@ It contains the Linux kernel configured with some emulated devices enabled and i
 - `shared-dir` - Path to the shared directory. Contents of this directory will be mounted in Renode. The embedded Linux in Renode will start in this directory.
 - `renode-run` - A command or a list of commands to run in Renode.
 - `devices` - List of devices to add to the workflow. If not specified, the action will not install any devices.
-- `image-path` - Url to tar.xz archive with compiled embedded Linux image. If not specified, the action will use the default one. See releases for examples.
+- `image-source-type` - url or path. If not specified: url
+- `image-source` - url of path to tar.xz archive with compiled embedded Linux image. If not specified, the action will use the default one. See releases for examples.
 
 ### Devices syntax
 

@@ -1,29 +1,12 @@
-name: Build and test
-on: [push, workflow_dispatch, repository_dispatch]
+name: Build and test on pull request
+on: [pull_request]
 
 jobs:
-  changes:
+  build-and-test:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
-    outputs:
-      build: ${{ steps.filter.outputs.build }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          base: ${{ github.ref }}
-          filters: |
-            build:
-              - 'br2-external/**'
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    needs: changes
-    if: ${{ needs.changes.outputs.build == 'true' && !github.event.act }}
+    # if: ${{ !github.event.act }}
     steps:
       - uses: actions/checkout@v3
 
@@ -31,11 +14,10 @@ jobs:
         if: ${{ env.ACT }}
         run: |
          sudo apt update -qq && sudo DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-         bc cpio rsync
+         python3-pip telnet iptables iproute2 bc cpio rsync
 
       - name: install-buildroot
         run: git clone --branch 2022.11.2 https://github.com/buildroot/buildroot buildroot
-
       - name: build-kernel
         run: |
           cd buildroot && \
@@ -44,39 +26,17 @@ jobs:
           cd .. && \
           mkdir images && \
           for i in hifive-unleashed-a00.dtb fw_payload.elf Image rootfs.cpio; do cp buildroot/output/images/$i images; done
-
       - name: compress
         run: tar cJvf images.tar.xz images
 
-      - name: send-to-releases
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: "${{ github.token }}"
-          file: images.tar.xz
-          asset_name: images.tar.xz
-          tag: latest
-          overwrite: true
-
-  default-configuration-test:
-    runs-on: ubuntu-latest
-    needs: build
-    if: ${{ !failure() }}
-    steps:
-      - uses: actions/checkout@v3
-
       - run: git clone https://github.com/antmicro/pyrav4l2.git tests/pyrav4l2
-
-      - name: get packages
-        if: ${{ env.ACT }}
-        run: |
-         sudo apt update -qq && sudo DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-         python3-pip telnet iptables iproute2
 
       - name: run-in-renode
         uses: ./
         with:
           shared-dir: ./tests
-          image-source: https://github.com/${{ github.repository }}/releases/download/latest/images.tar.xz
+          image-source-type: path
+          image-source: ./images.tar.xz
           renode-run: |
             ping -c 3 172.16.0.1
             wget example.org
