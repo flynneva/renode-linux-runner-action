@@ -20,8 +20,10 @@ jobs:
               - 'br2-external/**'
   build:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     needs: changes
-    if: ${{ needs.changes.outputs.build == 'true' && !github.event.eee }}
+    if: ${{ needs.changes.outputs.build == 'true' && !github.event.act }}
     steps:
       - uses: actions/checkout@v3
       - name: install-buildroot

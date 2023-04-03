@@ -65,13 +65,7 @@ BR2_PACKAGE_HOST_UBOOT_TOOLS_BOOT_SCRIPT_SOURCE="board/sifive/hifive-unleashed/b
 # Patches
 BR2_GLOBAL_PATCH_DIR="${BR2_EXTERNAL_SIFIVE_RENODE_CI_PATH}/patches"
 
-# Toolchain
-BR2_TOOLCHAIN_BUILDROOT_CXX=y
-BR2_TOOLCHAIN_BUILDROOT_WCHAR=y
-
 # Packages
-
-
 
 # video4linux packages
 BR2_PACKAGE_LIBV4L=y
