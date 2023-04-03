@@ -2,6 +2,7 @@ name: Build and test
 on: [push, workflow_dispatch, repository_dispatch]
 
 jobs:
+
   changes:
     runs-on: ubuntu-latest
     permissions:
@@ -29,7 +30,7 @@ jobs:
         run: |
           cd buildroot && \
           make BR2_EXTERNAL=../br2-external hifive_unleashed_defconfig && \
-          make && \
+          make -j4 && \
           cd .. && \
           mkdir images && \
           for i in hifive-unleashed-a00.dtb fw_payload.elf Image rootfs.cpio; do cp buildroot/output/images/$i images; done
@@ -51,6 +52,12 @@ jobs:
       - uses: actions/checkout@v3
 
       - run: git clone https://github.com/antmicro/pyrav4l2.git tests/pyrav4l2
+
+      - name: get packages
+        if: ${{ env.ACT }}
+        run: |
+         sudo apt update -qq && sudo DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+         python3-pip telnet iptables iproute2
 
       - name: run-in-renode
         uses: ./

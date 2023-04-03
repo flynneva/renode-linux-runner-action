@@ -323,7 +323,6 @@ def setup_network():
 
         run_cmd(child, "#", f'ip addr add "172.16.0.1/16" dev {TAP_INTERFACE}')
         run_cmd(child, "#", f"ip link set up dev {TAP_INTERFACE}")
-        run_cmd(child, "#", "sysctl -w net.ipv4.ip_forward=1")
         run_cmd(child, "#", f"iptables -A FORWARD -i {TAP_INTERFACE} -o {HOST_INTERFACE} -j ACCEPT")
         run_cmd(child, "#", f"iptables -A FORWARD -i {HOST_INTERFACE} -o {TAP_INTERFACE} -m state --state RELATED,ESTABLISHED -j ACCEPT")
         run_cmd(child, "#", f"iptables -t nat -A POSTROUTING -o {HOST_INTERFACE} -j MASQUERADE")

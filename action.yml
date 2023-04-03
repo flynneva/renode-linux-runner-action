@@ -13,7 +13,7 @@ inputs:
   image-path:
     description: Compiled linux kernel path
     required: false
-    default: "https://github.com/antmicro-labs/renode-linux-runner-action/releases/download/latest/images.tar.xz"
+    default: "https://github.com/antmicro/renode-linux-runner-action/releases/download/latest/images.tar.xz"
 runs:
   using: composite
   steps:
