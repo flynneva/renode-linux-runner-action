@@ -1,6 +1,8 @@
 name: Build and test
 on: [push, workflow_dispatch, repository_dispatch]
 
+permissions: write-all
+
 jobs:
   changes:
     runs-on: ubuntu-latest
@@ -20,9 +22,8 @@ jobs:
               - 'br2-external/**'
   build:
     runs-on: ubuntu-latest
-    permissions: read-all|write-all
     needs: changes
-    if: ${{ needs.changes.outputs.build == 'true' && !github.event.act }}
+    # if: ${{ needs.changes.outputs.build == 'true' && !github.event.act }}
     steps:
       - uses: actions/checkout@v3
 
@@ -37,12 +38,8 @@ jobs:
 
       - name: build-kernel
         run: |
-          cd buildroot && \
-          make BR2_EXTERNAL=../br2-external hifive_unleashed_defconfig && \
-          make -j4 && \
-          cd .. && \
           mkdir images && \
-          for i in hifive-unleashed-a00.dtb fw_payload.elf Image rootfs.cpio; do cp buildroot/output/images/$i images; done
+          dd if=/dev/random of=images/test.img bs=30M count=1
 
       - name: compress
         run: tar cJvf images.tar.xz images
