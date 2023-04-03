@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: changes
-    if: ${{ needs.changes.outputs.build == 'true' }}
+    if: ${{ needs.changes.outputs.build == 'true' && !github.event.eee }}
     steps:
       - uses: actions/checkout@v3
       - name: install-buildroot
