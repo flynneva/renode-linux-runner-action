@@ -29,7 +29,19 @@ runs:
       shell: bash
 
     - id: get-images
-      run: ./scripts/get-image.sh ${{ inputs.image }} && tar xf images.tar.xz
+      run: |
+        if [ -f "${{ inputs.image }}" ] && [ $(realpath "${{ inputs.image }}") == "$(realpath images.tar.xz)" ]; then \                                          \   
+          echo File already exists;                                                                                   \
+        elif [ -f "${{ inputs.image }}" ]; then                                                                       \
+          cp "${{ inputs.image }}" ./images.tar.xz;                                                                   \
+          echo copied;                                                                                                \
+        else                                                                                                          \
+          wget "${{ inputs.image }}" -O ./images.tar.xz;                                                              \
+        fi
+      shell: bash
+
+    - id: decompress
+      run: tar xf images.tar.xz
       shell: bash
     
     - id: copy-user-path
