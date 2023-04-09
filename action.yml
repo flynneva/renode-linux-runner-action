@@ -20,6 +20,7 @@ runs:
 
     - id: copy-user-path
       run: |
+        sudo mkdir -p ${{github.action_path}} && \
         sudo mkdir -p /mnt/user && \
         sudo cp -r "${{ inputs.shared-dir }}"/* /mnt/user
       shell: bash
