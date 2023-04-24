@@ -46,11 +46,13 @@ runs:
 
     - id: download-renode
       run: |
-        wget -q --no-verbose https://github.com/renode/renode/releases/download/v1.13.0/renode_1.13.0_amd64.deb &&
+        wget -q --no-verbose https://github.com/renode/renode/releases/download/v1.13.0/renode_1.13.0_amd64.deb
         sudo apt update -qq && sudo DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends --fix-missing \
         ./renode_1.13.0_amd64.deb
       shell: bash
 
     - id: test
-      run: sudo python3 "${{github.action_path}}/run-in-renode.py" "${{ inputs.renode-run }}" "${{ inputs.devices }}"
+      run: |
+        ls ${{github.action_path}}
+        sudo python3 "${{github.action_path}}/run-in-renode.py" "${{ inputs.renode-run }}" "${{ inputs.devices }}"
       shell: bash
