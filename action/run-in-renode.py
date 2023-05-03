@@ -479,6 +479,16 @@ def setup_renode():
 
         run_cmd(child, "(monitor)", "include @action/hifive.resc")
 
+        # Add directories
+        dirs = [
+            "/opt/ros",
+        ]
+        run_cmd(child, "(hifive-unleashed)", 'emulation CreateNetworkServer "server" "192.168.100.100"')
+        run_cmd(child, "(hifive-unleashed)", "connector Connect server switch0")
+        run_cmd(child, "(hifive-unleashed)", "server StartTFTP 69")
+        for dir in dirs:
+            run_cmd(child, "(hifive-unleashed)", f"server.tftp ServeDirectory @{dir}")
+
         run_cmd(child, "(hifive-unleashed)", "start")
         run_cmd(child, "(hifive-unleashed)", "uart_connect sysbus.uart0")
 
@@ -490,7 +500,6 @@ def setup_renode():
             sys_exit(1)
 
         # Adding devices
-
         run_cmd(child, "#", "dmesg -n 1")
         for device in added_devices:
             for command in device.add_commands:
