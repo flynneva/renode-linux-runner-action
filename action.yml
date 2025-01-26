@@ -95,14 +95,15 @@ runs:
 
     - id: install-packages
       run: |
-        cd ${GITHUB_ACTION_PATH} &&                                                                                                      \
-        wget -q --no-verbose https://github.com/renode/renode/releases/download/v${RENODE_VERSION}/renode_${RENODE_VERSION}_amd64.deb && \
-        sudo DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends                                                   \
-        ./renode_${RENODE_VERSION}_amd64.deb python3-venv &&                                                                             \
-        sudo pip3 install -r requirements.txt
+        cd ${GITHUB_ACTION_PATH}
+        mkdir renode_portable
+        wget https://builds.renode.io/renode-${RENODE_VERSION}.linux-portable.tar.gz
+        tar xf  renode-latest.linux-portable.tar.gz -C renode_portable --strip-components=1
+        cd renode_portable
+        export PATH="`pwd`:$PATH"
       shell: bash
       env:
-        RENODE_VERSION: "1.13.3"
+        RENODE_VERSION: "1.15.3"
 
     - id: create-pip-virtual-environment
       run: cd ${GITHUB_ACTION_PATH} && mkdir -p venv-dir && python3 -m venv venv-dir
